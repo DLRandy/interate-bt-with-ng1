@@ -4,9 +4,8 @@ var concat = require('gulp-concat');
 var pkg = require('./package.json');
 var less = require('gulp-less');
 var livereload = require('gulp-livereload');
-var ngAnnotate = require('gulp-ng-annotate');
-// var jshint = require('gulp-jshint');
-
+//这个liveReload需要浏览器安装LiveReload的扩展
+//之后
 var paths = {
 	js: [
 		'assets/js/vendor/jquery.js',
@@ -23,17 +22,9 @@ var paths = {
 	less: 'assets/less/*.less'
 };
 
-// gulp.task('lint', function() {
-//   return gulp.src(['assets/js/modules/*.js',*/
-// 		'assets/js/controllers/*.js'/*]*/)
-//     .pipe(jshint())
-//     .pipe(jshint.reporter('YOUR_REPORTER_HERE'));
-// });
-
 gulp.task('uglify', function () {
 	gulp.src(paths.js)
 	  .pipe(concat(pkg.name+'.js'))
-	  .pipe(ngAnnotate())
 	  .pipe(uglify().on('error', function(e){
 	  	console.log(e);
 	  	}))
@@ -41,13 +32,12 @@ gulp.task('uglify', function () {
 });
 
 gulp.task('watch', function () {
-	var server = livereload();
-
+		livereload.listen();
 	gulp.watch(paths.js,['uglify']);
 	gulp.watch(paths.less,['less']);
 	gulp.watch('assets/css/bootstrap.css').on('change', function(file) {
-		
-		server.changed(file.path);
+	
+	
 	});
 });
 
@@ -56,7 +46,8 @@ gulp.task('less', function () {
 	  .pipe(less({
 	  	filename: 'bootstrap.css'
 	  }))
-	  .pipe(gulp.dest('assets/css'));
+	  .pipe(gulp.dest('assets/css'))
+	  .pipe(livereload());
 });
 
 gulp.task('default',['uglify','less']);
