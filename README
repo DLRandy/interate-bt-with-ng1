@@ -1,1 +1,5 @@
 bootstrap 实践
+
+run:
+npm install
+http-server -c-1 -a 127.0.0.1 -p 8000
